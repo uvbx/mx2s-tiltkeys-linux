@@ -84,7 +84,7 @@ dependencies = [
 
 [[package]]
 name = "mx2s-tiltkeys-linux"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "evdev",
 ]

@@ -48,6 +48,7 @@ the installer automatically performs the following:
       ```bash
       sudo chmod +x install.sh
       ```
+ 
  2· run the install script with
       ``` bash
       ./install.sh

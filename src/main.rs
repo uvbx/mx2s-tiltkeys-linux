@@ -29,6 +29,7 @@ fn get_dev() -> evdev::Device {
 
 fn main() -> Result <(), Box<dyn Error>> {
 
+    
     let mut device = get_dev();
 
     let mut keys = AttributeSet::<Key>::new();
