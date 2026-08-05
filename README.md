@@ -14,7 +14,7 @@ This utility simply listens for horizontal wheel events (using evdev); then tran
  · Automatically detects the mouse, and reconnects when/if the mouse sleeps
 
  · Maps horizontal wheel movement to volume controls (left - down; right - up)
- 
+
  · Lightweight, and simple program
 
 
@@ -31,11 +31,12 @@ This utility simply listens for horizontal wheel events (using evdev); then tran
 ## Installation
 please note before running the installer!
 the installer automatically performs the following:
+
  · builds/compiles the rust binary
 
  · installs the binary to /usr/local/bin
 
- · configures uninput permissions
+ · configures uinput permissions
 
  · creates a user systemd service
 
@@ -44,10 +45,10 @@ the installer automatically performs the following:
 
 
  1· make the included install script executable
-```bash
+      ```bash
       sudo chmod +x install.sh
-```
+      ```
  2· run the install script with
-``` bash
+      ``` bash
       ./install.sh
-```
+      ```
