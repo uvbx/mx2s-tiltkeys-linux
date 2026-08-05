@@ -1,32 +1,33 @@
-use evdev::{ AttributeSet, EventType, InputEvent, Key, RelativeAxisType};
+use evdev::{ AttributeSet, EventType, InputEvent, Key, RelativeAxisType };
 use evdev::uinput::VirtualDeviceBuilder;
 use std::thread::sleep;
 use std::time::Duration;
 use std::error::Error;
 
-fn main() -> Result < (), Box<dyn Error> > {
 
-    fn get_dev() -> evdev::Device {
-        loop {
-            let target_device = evdev::enumerate().find_map(|(_, device)| {
-                let name = device.name()?;
+fn get_dev() -> evdev::Device {
+    loop {
+        let target_device = evdev::enumerate().find_map(|(_, device)| {
+            let name = device.name()?;
 
-                if name.contains("MX Anywhere 2S") {
-                    Some(device)
-                } else {
-                    None
-                }
-
-            });
-
-            if let Some(dev) = target_device {
-                println!("connected to mouse");
-                return dev;
+            if name.contains("MX Anywhere 2S") {
+                Some(device)
+            } else {
+                None
             }
 
-            sleep(Duration::from_secs(2));
+        });
+
+        if let Some(dev) = target_device {
+                return dev;
         }
+
+        sleep(Duration::from_secs(3));
     }
+}
+
+
+fn main() -> Result <(), Box<dyn Error>> {
 
     let mut device = get_dev();
 
@@ -38,10 +39,7 @@ fn main() -> Result < (), Box<dyn Error> > {
         .name("Wheel_Tilt_Keys")
         .with_keys(&keys)?
         .build()?;
-
-    println!("spawned virtual keyboard");
-
-    println!("listening for keypresses");
+        
     loop {
 
         let disconnected = match device.fetch_events() {
@@ -66,7 +64,7 @@ fn main() -> Result < (), Box<dyn Error> > {
         };
 
         if disconnected {
-            println!("mouse slept or disconnected. waiting for reconnected");
+            println!("mx2s disconnected. waiting for reconnection.");
             device = get_dev();
         }
 
