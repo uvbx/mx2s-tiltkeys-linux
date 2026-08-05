@@ -1,0 +1,7 @@
+[package]
+name = "mx2s-tiltkeys-linux"
+version = "v1.0.0"
+edition = "2024"
+
+[dependencies]
+evdev = "0.12"

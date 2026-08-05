@@ -1,0 +1,59 @@
+#!/usr/bin/env bash 
+
+#Install script, ensure that this is run inside of the original directory.
+
+set -e
+
+systemctl --user stop mx2s-tiltkeys-linux.service 
+
+
+GREEN="\x1b[38;5;49m"
+BLUE="\x1b[38;5;74m"
+YELW="\x1b[38;5;229m"
+FEND="\x1b[0m"
+
+echo -e "${YELW} [1/4]${FEND} \n building rust binary"
+cargo build --release -q
+
+
+sudo cp target/release/mx2s-tiltkeys-linux /usr/local/bin/mx2s-tiltkeys-linux
+sudo chmod +x /usr/local/bin/mx2s-tiltkeys-linux
+echo -e "${YELW} [2/4] ${FEND} \ninstalled bin to /usr/local/bin"
+
+
+sudo usermod -aG input "$USER"
+echo "uinput" | sudo tee /etc/modules-load.d/uinput.conf > /dev/null
+echo 'z /dev/uinput 0660 root input - -' | sudo tee /etc/tmpfiles.d/uinput.conf > /dev/null
+echo 'KERNEL=="uinput", MODE:="0660", GROUP="input", OPTIONS+="static_node=uinput"' | sudo tee /etc/udev/rules.d/99-uinput.rules > /dev/null
+echo -e "${YELW} [3/5] ${FEND} \n configured uinput perms and input group"
+
+echo -e "${YELW} [4/5] ${FEND} \n applying hardware perm changes"
+sudo systemd-tmpfiles --create /etc/tmpfiles.d/uinput.conf
+sudo udevadm control --reload-rules && sudo udevadm trigger
+
+mkdir -p "$HOME/.config/systemd/user"
+echo -e "${YELW} [5/5]${FEND}\n created and enabled as service "
+
+cat << EOF > "$HOME/.config/systemd/user/mx2s-tiltkeys-linux.service"
+[Unit]
+Description=MX2S Tilt Wheel Daemon
+After=graphical-session.target
+
+[Service]
+ExecStart=/usr/local/bin/mx2s-tiltkeys-linux
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=default.target
+EOF
+
+
+
+systemctl --user daemon-reload
+echo -e "\n${GREEN} reloaded daemon ${FEND}"
+systemctl --user enable --now mx2s-tiltkeys-linux.service
+echo -e "${GREEN} enabled as service ${FEND}"
+
+
+echo -e "${GREEN} \n install completed. service is now active. 🐱 ${FEND}"
