@@ -15,10 +15,16 @@ FEND="\x1b[0m"
 echo -e "${YELW} [1/4]${FEND} \n building rust binary"
 cargo build --release -q
 
+if [ ! -d "$HOME/.config/mx2s-tiltkeys" ]; then
+  echo "${GREEN} creating base config ${FEND}"
+  mkdir -p "$HOME/.config/mx2s-tiltkeys" 
+  cp ./config.json "$HOME/.config/mx2s-tiltkeys/config.json"
+fi
+
 
 sudo cp target/release/mx2s-tiltkeys-linux /usr/local/bin/mx2s-tiltkeys-linux
 sudo chmod +x /usr/local/bin/mx2s-tiltkeys-linux
-echo -e "${YELW} [2/4] ${FEND} \ninstalled bin to /usr/local/bin"
+echo -e "${YELW} [2/4] ${FEND} \n installed bin to /usr/local/bin"
 
 
 sudo usermod -aG input "$USER"
@@ -48,12 +54,10 @@ RestartSec=3
 WantedBy=default.target
 EOF
 
-
-
 systemctl --user daemon-reload
 echo -e "\n${GREEN} reloaded daemon ${FEND}"
 systemctl --user enable --now mx2s-tiltkeys-linux.service
 echo -e "${GREEN} enabled as service ${FEND}"
 
 
-echo -e "${GREEN} \n install completed. service is now active. 🐱 ${FEND}"
+echo -e "${GREEN} \n install completed. service is now active. ${FEND}"

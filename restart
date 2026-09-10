@@ -1,0 +1,11 @@
+#!/usr/bin/env bash 
+set -e
+
+GREEN="\x1b[38;5;49m"
+YELW="\x1b[38;5;229m"
+FEND="\x1b[0m"
+
+systemctl --user stop mx2s-tiltkeys-linux.service || true
+systemctl --user enable --now mx2s-tiltkeys-linux.service
+
+echo -e "${GREEN}restarted service${FEND}"
