@@ -4,16 +4,19 @@
 
 set -e
 
-systemctl --user stop mx2s-tiltkeys-linux.service || true
-
+systemctl --user is-enabled mx2s-tiltkeys-linux.service &>/dev/null && systemctl --user stop mx2s-tiltkeys-linux.service || true
 
 GREEN="\x1b[38;5;49m"
 BLUE="\x1b[38;5;74m"
 YELW="\x1b[38;5;229m"
 FEND="\x1b[0m"
 
+if [ -f /usr/local/bin/mx2s-tiltkeys-linux ]; then
+  sudo rm -f /usr/local/bin/mx2s-tiltkeys-linux
+fi
+
 echo -e "${YELW} [1/4]${FEND} \n building rust binary"
-cargo build --release -q 2>./build-log.txt
+cargo build --release -q 2>>./build-log.txt
 
 if [ ! -d "$HOME/.config/mx2s-tiltkeys" ]; then
   echo "${GREEN} creating base config ${FEND}"
