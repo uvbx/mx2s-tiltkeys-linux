@@ -64,18 +64,31 @@ fn get_dev() -> evdev::Device {
         sleep(Duration::from_secs(3));
     }
 }
+/*
+fn error_handle(error: fish, msg: String, level: u8) {
+    println!("{}", msg);
 
+    match level {
+        3 => {
+            println!("{} \n{}", msg, Err);
+            std::process::exit(1);
+        },
+        2 => { 
+            println!("{} \n{}", msg, Err);
+        },
+        _ => {
+            println!("");
+        }
+    }
+
+} // unimplemented
+*/
 
 fn main() -> Result <(), Box<dyn Error>> {
-
-
     let config: Config = check_config()?;
 
-    println!("{}", config.left_key);
     let left_key: Key = config.left_key.parse().map_err(|e| format!("invalid left key set {:?}", e))?;
     let right_key: Key = config.right_key.parse().map_err(|e| format!("invalid left key set {:?}", e))?;
-
-    println!("version: {} \nleft: {} \nright: {}", config.version, config.left_key, config.right_key);
 
     let mut device: evdev::Device = get_dev();
 
