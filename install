@@ -62,5 +62,4 @@ echo -e "\n${GREEN} reloaded daemon ${FEND}"
 systemctl --user enable --now mx2s-tiltkeys-linux.service
 echo -e "${GREEN} enabled as service ${FEND}"
 
-
 echo -e "${GREEN} \n install completed. service is now active. ${FEND}"

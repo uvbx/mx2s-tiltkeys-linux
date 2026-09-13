@@ -43,12 +43,10 @@ the installer automatically performs the following:
 
 
 
- 1· make the included install script executable
-      ```bash
-      sudo chmod +x install.sh
-      ```
  
- 2· run the install script with
+run the install script with
       ``` bash
-      ./install.sh
-      ```
+      ./install.sh   
+```
+```
+```
