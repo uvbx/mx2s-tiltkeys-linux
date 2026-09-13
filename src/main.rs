@@ -48,7 +48,7 @@ fn get_dev() -> Device {
         let target_device: Option<Device> = evdev::enumerate().find_map(|(_, device)| {
             let name: &str = device.name().expect("");
 
-            if name.contains("MX Anywhere 2s") {
+            if name.contains("MX Anywhere 2S") {
                 Some(device)
             } else {
                 None
