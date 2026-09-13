@@ -6,11 +6,10 @@ MX2S="mx2s-tiltkeys-linux"
 GREEN="\x1b[38;5;49m"
 YELW="\x1b[38;5;229m"
 FEND="\x1b[0m"
-killall -9 ${MX2S} 2>${N} || :
-sudo rm -r ~/.config/systemd/user/${MX2S}.service 2>${N} || :
+killall -15 ${MX2S} 2>${N} || :
+rm -r ~/.config/systemd/user/${MX2S}.service 2>${N} || :
 systemctl --user is-enabled 2>${N} && systemctl --user stop ${MX2S}.service || :
-systemctl --user disable ${MX2S}.service 2>/${N} && echo -e "${YELW} stopping and removing service${FEND}" || :
-systemctl --user daemon-reload 2>/${N}
-echo -e "${YELW} reloaded daemons ${FEND}"
-sudo rm -r /usr/local/bin/${MX2S} 2>/${N} && echo -e "${YELW} removing bin${FEND}" || :
+systemctl --user disable ${MX2S}.service 2>${N} && echo -e "${YELW} stopping/removing service${FEND}" || :
+systemctl --user daemon-reload 2>${N}
+sudo rm -r /usr/local/bin/${MX2S} 2>${N} && echo -e "${YELW} removing bin${FEND}" || :
 echo -e "${GREEN} uninstalled :)${FEND}"
