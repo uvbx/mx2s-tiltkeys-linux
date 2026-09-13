@@ -9,20 +9,20 @@ This utility simply listens for horizontal wheel events; then translates that in
 
 
 ## Features
- · Automatically detects the mouse, and reconnects when/if the mouse sleeps
+ · automatically detects the mouse, and reconnects when/if the mouse sleeps
 
- · Maps horizontal wheel movement to configuration
+ · allows custom mapping of horizontal wheel tilt
 
- · Lightweight
+ · reletively lightweight (around 2mb of memory usage)
 
 
 ## Requirements
 
  · `uinput`
 
- · Access to `/dev/input/event*/`
+ · access to `/dev/input/event*/`
 
- · Rust (to build from source)
+ · rust (to build from source)
 
 
 ## Installation
@@ -43,10 +43,30 @@ the installer automatically performs the following:
 
 
 
- 
-run the install script with
-      ``` bash
-      ./install.sh   
+run the installer with
+```
+./install
+```
+
+
+there are also two other included utlity scripts.
+
+restart the service with
+```
+./restart
+```
+
+finally, uninstall the service with
+```
+./uninstall
+```
+```
+```
+```
+```
+```
+```
+```
 ```
 ```
 ```
