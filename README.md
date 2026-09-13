@@ -59,5 +59,3 @@ restart the service with
 finally, uninstall the service with
 ```
 ./uninstall
-```
-```
