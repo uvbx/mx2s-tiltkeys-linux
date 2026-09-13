@@ -1,0 +1,11 @@
+[Unit]
+Description=MX2S-tiltwheel daemon
+After=graphical-session.target
+
+[Service]
+ExecStart=/usr/local/bin/${MX2S}
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target
