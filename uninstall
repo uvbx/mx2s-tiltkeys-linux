@@ -1,15 +1,16 @@
 #!/usr/bin/env bash 
 set -e
 
+N="/dev/null"
+MX2S="mx2s-tiltkeys-linux"
 GREEN="\x1b[38;5;49m"
 YELW="\x1b[38;5;229m"
 FEND="\x1b[0m"
-echo -e "${YELW} stopping and removing service${FEND}"
-killall -9 mx2s-tiltkeys-linux
-sudo rm -r ~/.config/systemd/user/mx2s-tiltkeys-linux.service 2>/dev/null || echo " service file already removed. skipping."
-systemctl --user is-enabled 2>/dev/null && systemctl --user stop mx2s-tiltkeys-linux.service || echo -e " service is already stopped. skipping."
-systemctl --user disable mx2s-tiltkeys-linux.service || echo " service is already disabled. skipping."
-systemctl --user daemon-reload
-echo -e "${YELW} reloaded user daemons ${FEND}"
-sudo rm -r /usr/local/bin/mx2s-tiltkeys-linux && echo -e "${YELW} removing binary${FEND}" || echo "binary already removed. skipping."
-echo -e "${GREEN}\n\nuninstalled${FEND}"
+killall -9 ${MX2S} 2>${N} || :
+sudo rm -r ~/.config/systemd/user/${MX2S}.service 2>${N} || :
+systemctl --user is-enabled 2>${N} && systemctl --user stop ${MX2S}.service || :
+systemctl --user disable ${MX2S}.service 2>/${N} && echo -e "${YELW} stopping and removing service${FEND}" || :
+systemctl --user daemon-reload 2>/${N}
+echo -e "${YELW} reloaded daemons ${FEND}"
+sudo rm -r /usr/local/bin/${MX2S} 2>/${N} && echo -e "${YELW} removing bin${FEND}" || :
+echo -e "${GREEN} uninstalled :)${FEND}"

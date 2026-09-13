@@ -1,22 +1,19 @@
-#!/usr/bin/env bash 
+#!/usr/bin/env bash
 
-#Install script, ensure that this is run inside of the original directory.
-
+N="/dev/null"
 set -e
+MX2S="mx2s-tiltkeys-linux"
 
-systemctl --user is-enabled mx2s-tiltkeys-linux.service &>/dev/null && systemctl --user stop mx2s-tiltkeys-linux.service || true
+# checks if main.rs exists, before even running build and install script
+[ -f src/main.rs &>${N} ] || (echo -e "main.rs not found! ): \nrun in original dir" && exit 1)
+systemctl --user is-active ${MX2S}.service &>${N} && systemctl --user stop ${MX2S}.service || :
 
 GREEN="\x1b[38;5;49m"
-BLUE="\x1b[38;5;74m"
 YELW="\x1b[38;5;229m"
 FEND="\x1b[0m"
 
-if [ -f /usr/local/bin/mx2s-tiltkeys-linux ]; then
-  sudo rm -f /usr/local/bin/mx2s-tiltkeys-linux
-fi
-
-echo -e "${YELW} [1/4]${FEND} \n building rust binary"
-cargo build --release -q 2>>./build-log.txt
+echo -e "${YELW} [1/5]${FEND} \n building rust binary"
+cargo build --release -q 2>./build-log.txt
 
 if [ ! -d "$HOME/.config/mx2s-tiltkeys" ]; then
   echo "${GREEN} creating base config ${FEND}"
@@ -24,16 +21,16 @@ if [ ! -d "$HOME/.config/mx2s-tiltkeys" ]; then
   cp ./config.json "$HOME/.config/mx2s-tiltkeys/config.json"
 fi
 
+sudo cp target/release/${MX2S} /usr/local/bin/${MX2S}
+echo -e "${YELW} [2/5] ${FEND} \n installed bin to /usr/local/bin"
 
-sudo cp target/release/mx2s-tiltkeys-linux /usr/local/bin/mx2s-tiltkeys-linux
-sudo chmod +x /usr/local/bin/mx2s-tiltkeys-linux
-echo -e "${YELW} [2/4] ${FEND} \n installed bin to /usr/local/bin"
+if ! groups "$USER" | grep -q "\binput\b"; then
+  sudo usermod -aG input "$USER"
+fi
 
-
-sudo usermod -aG input "$USER"
-echo "uinput" | sudo tee /etc/modules-load.d/uinput.conf > /dev/null
-echo 'z /dev/uinput 0660 root input - -' | sudo tee /etc/tmpfiles.d/uinput.conf > /dev/null
-echo 'KERNEL=="uinput", MODE:="0660", GROUP="input", OPTIONS+="static_node=uinput"' | sudo tee /etc/udev/rules.d/99-uinput.rules > /dev/null
+echo "uinput" | sudo tee /etc/modules-load.d/uinput.conf > ${N}
+echo 'z /dev/uinput 0660 root input - -' | sudo tee /etc/tmpfiles.d/uinput.conf > ${N}
+echo 'KERNEL=="uinput", MODE:="0660", GROUP="input", OPTIONS+="static_node=uinput"' | sudo tee /etc/udev/rules.d/99-uinput.rules > ${N}
 echo -e "${YELW} [3/5] ${FEND} \n configured uinput perms and input group"
 
 echo -e "${YELW} [4/5] ${FEND} \n applying hardware perm changes"
@@ -41,25 +38,23 @@ sudo systemd-tmpfiles --create /etc/tmpfiles.d/uinput.conf
 sudo udevadm control --reload-rules && sudo udevadm trigger
 
 mkdir -p "$HOME/.config/systemd/user"
-echo -e "${YELW} [5/5]${FEND}\n created and enabled as service "
+echo -e "${YELW} [5/5]${FEND}\n created and enabled as service"
 
-cat << EOF > "$HOME/.config/systemd/user/mx2s-tiltkeys-linux.service"
+cat << EOF > "$HOME/.config/systemd/user/${MX2S}.service"
 [Unit]
-Description=MX2S Tilt Wheel Daemon
+Description=MX2S-tiltwheel daemon
 After=graphical-session.target
 
 [Service]
-ExecStart=/usr/local/bin/mx2s-tiltkeys-linux
+ExecStart=/usr/local/bin/${MX2S}
 Restart=always
-RestartSec=3
+RestartSec=10
 
 [Install]
 WantedBy=default.target
 EOF
 
-systemctl --user daemon-reload
-echo -e "\n${GREEN} reloaded daemon ${FEND}"
-systemctl --user enable --now mx2s-tiltkeys-linux.service
-echo -e "${GREEN} enabled as service ${FEND}"
 
-echo -e "${GREEN} \n install completed. service is now active. ${FEND}"
+systemctl --user daemon-reload
+systemctl --user enable --now ${MX2S}.service 2>${N}
+echo -e "${GREEN} \n install completed. :)${FEND}"

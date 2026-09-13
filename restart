@@ -1,13 +1,8 @@
 #!/usr/bin/env bash 
 set -e
+MX2S="mx2s-tiltkeys-linux"
 
-GREEN="\x1b[38;5;49m"
-YELW="\x1b[38;5;229m"
-FEND="\x1b[0m"
-
-killall -9 mx2s-tiltkeys-linux
-systemctl --user is-enabled &>/dev/null && systemctl --user stop mx2s-tiltkeys-linux.service || true
-
-systemctl --user enable --now mx2s-tiltkeys-linux.service
-
-echo -e "${GREEN}restarted service${FEND}"
+killall -9 ${MX2S}
+systemctl --user is-enabled &>/dev/null && systemctl --user stop ${MX2S}.service || :
+systemctl --user enable --now ${MX2S}.service &>/dev/null
+echo -e "\x1b[38;5;49mrestarted :)\x1b[0m"
