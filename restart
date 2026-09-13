@@ -2,7 +2,7 @@
 set -e
 MX2S="mx2s-tiltkeys-linux"
 
-killall -9 ${MX2S}
+killall -15 ${MX2S}
 systemctl --user is-enabled &>/dev/null && systemctl --user stop ${MX2S}.service || :
 systemctl --user enable --now ${MX2S}.service &>/dev/null
 echo -e "\x1b[38;5;49mrestarted :)\x1b[0m"
