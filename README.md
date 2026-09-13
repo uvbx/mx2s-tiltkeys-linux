@@ -61,12 +61,3 @@ finally, uninstall the service with
 ./uninstall
 ```
 ```
-```
-```
-```
-```
-```
-```
-```
-```
-```
