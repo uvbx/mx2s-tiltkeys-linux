@@ -38,7 +38,7 @@ sudo systemd-tmpfiles --create /etc/tmpfiles.d/uinput.conf
 sudo udevadm control --reload-rules && sudo udevadm trigger
 
 mkdir -p "$HOME/.config/systemd/user"
-echo -e "${YELW} [5/5]${FEND}\n created and enabled as service"
+echo -e "${YELW} [5/5]${FEND}\n created and enabled service"
 
 cp ${MX2S}.service "$HOME/.config/systemd/user/${MX2S}.service"
 
